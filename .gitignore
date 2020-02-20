@@ -1,0 +1,4 @@
+hwts_data/
+data/
+.venv/
+*.pyc
