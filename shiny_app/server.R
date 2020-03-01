@@ -7,12 +7,11 @@ library(readxl)
 library(googleway)
 library(shinydashboard)
 
-eo_parcels_sf <- st_read("./data/eo_assess_parcels_sf.shp") %>%
+eo_parcels_sf <- st_read("./../data/shiny_in/eo_assess_parcels_sf.shp") %>%
   mutate(addr_full = paste0(st_no," ",st_name)) %>%
   rename(apn_sort = apn_srt)
 
-eo_parcel_zoning <- read.csv("./data/parcel_zoning.csv")
-oak_bus_license <- read.csv("./data/business_data.csv")
+oak_bus_license <- read.csv("./../data/shiny_in/business_data.csv")
 
 map_key <- "AIzaSyBqD0BnsyzQEmLtbe6egspJ-ljHsZ63zoU"
 
@@ -45,15 +44,6 @@ server <- function(input, output, session) {
       mutate('Mailing Address' = paste0(ma_addr, ", ", m_cty_s, " ", ma_zip)) %>%
       rename('APN' = apn_sort, 'Use Code' = use_cod, 'Owner' = owner, 'Use Code Description' = us_cd_c,'Address' = addr_full) %>%
       select(-c(ma_addr, m_cty_s, ma_zip))
-  })
-  
-  output$zoning_dt <- renderTable({
-    apn_list <- (eo_parcels_sf %>% filter(addr_full == input$search_addr))$apn_sort
-    eo_parcel_zoning %>% filter(apn_sort %in% apn_list) %>%
-      mutate(pct_parcel = paste0(round(100 * prop_parcel),"%")) %>%
-      select(apn_sort, pct_parcel, overlay, basezone, ordinance) %>%
-      arrange(apn_sort) %>%
-      rename("APN" = apn_sort, "Proportion of Parcel in Zone" = pct_parcel,"Overlay Zone" = overlay, "Basezone" = basezone, "Instituting Ordinance" = ordinance)
   })
   
   output$businesses_dt <- renderTable({

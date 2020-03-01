@@ -17,7 +17,7 @@ library(googleway)
 library(shinydashboard)
 
 
-eo_parcels_sf <- st_read("./data/eo_assess_parcels_sf.shp") %>%
+eo_parcels_sf <- st_read("./../data/shiny_in/eo_assess_parcels_sf.shp") %>%
   mutate(addr_full = paste0(st_no," ",st_name)) %>%
   rename(apn_sort = apn_srt)
 
@@ -35,13 +35,6 @@ ui <- dashboardPage(
           solidHeader = TRUE,
           title = "Assessor",
           tableOutput('assessor_dt'),
-          width = NULL,
-          collapsible = TRUE
-        ),
-        box(
-          solidHeader = TRUE,
-          title = "Zoning Information",
-          tableOutput('zoning_dt'),
           width = NULL,
           collapsible = TRUE
         ),

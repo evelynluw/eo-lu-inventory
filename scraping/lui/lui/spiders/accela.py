@@ -85,7 +85,6 @@ class AccelaSpider(scrapy.Spider):
 	# entry point into crawling
 	def start_requests(self):
 		date_range = ['01/01/1900', datetime.today().strftime('%m/%d/%Y')]
-		print(date_range)
 		for zipcode in ['94621','94601','94603']:
 			# send POST request with the login info
 			yield Request(self.url_get_hidden_forms, callback=self.parse_hidden_fields_init, dont_filter=True, meta = {'zipcode': zipcode, 'date_range': date_range})
@@ -178,7 +177,7 @@ class AccelaSpider(scrapy.Spider):
 		search_formdata = self.search_formdata_base
 		search_formdata['ctl00$ScriptManager1'] = 'ctl00$PlaceHolderMain$dgvPermitList$updatePanel|ctl00$PlaceHolderMain$dgvPermitList$gdvPermitList$ctl13$ctl{:02d}'.format(query_id)
 		search_formdata['__EVENTTARGET'] = 'ctl00$PlaceHolderMain$dgvPermitList$gdvPermitList$ctl13$ctl{:02d}'.format(query_id)
-		search_formdata['ctl00$PlaceHolderMain$dgvPermitList$gdvPermitList$hfSaveSelectedItems'] : ','
+		search_formdata['ctl00$PlaceHolderMain$dgvPermitList$gdvPermitList$hfSaveSelectedItems'] = ','
 		search_formdata['ctl00$PlaceHolderMain$generalSearchForm$txtGSStartDate'] = date_range[0]
 		search_formdata['ctl00$PlaceHolderMain$generalSearchForm$txtGSEndDate'] = date_range[1]
 		search_formdata['ctl00$PlaceHolderMain$generalSearchForm$txtGSAppZipSearchPermit'] = zipcode
@@ -192,7 +191,7 @@ class AccelaSpider(scrapy.Spider):
 	def parse_permit_det_page(self, response):
 		yield_dict = response.meta
 
-		print("parsing page {}".format(yield_dict['det_link']))
+		logging.info("parsing page {}".format(yield_dict['det_link']))
 
 		yield_dict['apn'] = response.xpath("//h2[./text() = 'Parcel Number:']/following-sibling::div/text()").extract_first()
 		app_qs = response.xpath("//div[@class='MoreDetail_ItemColASI MoreDetail_ItemCol1']/span/text()").extract()

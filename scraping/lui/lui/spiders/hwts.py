@@ -1,32 +1,57 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy import Request
-from cStringIO import StringIO
-import urllib2
 import re
 from scrapy.http import FormRequest
 import json
+import urllib
 import csv
 import os
 import pandas as pd
-from grandfathering.items import HWTSItem
+import logging
+from lui.items import HWTSItem
 
 class HWTSSpider(scrapy.Spider):
-	name = 'dtsc-hwts'
+	name = 'hwts'
 	allowed_domains = ['hwts.dtsc.ca.gov']
-	search_url = 'https://hwts.dtsc.ca.gov/hwts_Reports/ReportPages/Report01.aspx?epaid=&id_test=equals&address_type=Physical&city=&county=0&name=&name_search=FAC_NAME&epa_sub1=&status_value=all&street1=&prisortby=EPA_ID&secsortby=%20&fac_naics=&sort_dir=asc&cupa=&state=&zip='
-	page_url = 'https://hwts.dtsc.ca.gov/hwts_Reports/ReportPages/Report03.aspx?epaid='
-	dir_loc = "C:/Users/dpsak/OneDrive - Communities for a Better Environment/Code/Python/grandfathering/hwts_data/"
+	search_url = 'https://hwts.dtsc.ca.gov/hwts_Reports/ReportPages/Report01.aspx'
+	
+	search_params = {
+		'epaid': '',
+		'id_test': 'equal',
+		'address_type': 'Physical',
+		'city': '',
+		'county': '0',
+		'name': '',
+		'name_search': 'FAC_NAME',
+		'epa_sub1': '',
+		'status_value': 'all',
+		'street1': '',
+		'prisortby':'EPA_ID',
+		'secsortby': ' ',
+		'fac_naics':'',
+		'sort_dir': 'asc',
+		'cupa': '',
+		'state': '',
+		'zip': ''
+	}
+
+	page_url = 'https://hwts.dtsc.ca.gov/hwts_Reports/ReportPages/Report03.aspx'
+	dir_loc = "../../data/scraping_out/hwts/"
 	general_info = []
 	general_headers = ['id_num', 'fac_name', 'county', 'naics', 'status', 'inactive_date', 'record_date', 'update_date', 'location_addr', 
 			'location_city', 'location_st', 'location_zip', 'location_phone', 'mailing_name', 'mailing_addr', 'mailing_city', 'mailing_st',
 			'mailing_zip', 'mailing_phone', 'owner_name', 'owner_addr', 'owner_city', 'owner_st', 'owner_zip', 'owner_phone',
 			'operator_name', 'operator_addr', 'operator_city', 'operator_st', 'operator_zip', 'operator_phone']
-		
+
+	logger = logging.basicConfig(filename='logging.log',level=logging.INFO)
+
 	def start_requests(self):
 		zip_list = ["94621", "94601", "94603"]
 		for zipcode in zip_list:
-			yield Request(self.search_url + zipcode, callback=self.parseZipLanding, method='GET')
+			params = self.search_params
+			params['zip'] = zipcode
+			yield Request("{}?{}".format(self.search_url,urllib.parse.urlencode(params)), callback=self.parseZipLanding, method='GET')
 			return
 
 	def parseZipLanding(self, response):
@@ -34,7 +59,8 @@ class HWTSSpider(scrapy.Spider):
 
 		for page in page_links:
 			ca_id = page.split('=')[1]
-			page_url = callback=self.page_url + ca_id
+			page_url = "{}?epaid={}".format(self.page_url,ca_id)
+			logging.info("Navigating to details page for URL {}".format(page_url))
 			yield Request(page_url, callback=self.parseZip, method='GET')
 
 	def parseZip(self, response):
@@ -92,7 +118,6 @@ class HWTSSpider(scrapy.Spider):
 				'HWTS_Report_CookiesEntity_Data_Xfer': manifest_type
 			}
 
-			print header
 			# get Federal manifests
 			yield Request("https://hwts.dtsc.ca.gov/hwts_Reports/ReportPages/DrillDownReportPages/RCRAReport03DrillDown.aspx", callback=self.parseManifest, dont_filter = True, method='GET', headers = header, cookies = cookies, meta = {'id_no': id_num, 'program': "RCRA", 'man_type': manifest_type})
 
@@ -100,7 +125,7 @@ class HWTSSpider(scrapy.Spider):
 			yield Request("https://hwts.dtsc.ca.gov/hwts_Reports/ReportPages/DrillDownReportPages/HWTSReport03DrillDown.aspx", callback=self.parseManifest, dont_filter = True, method='GET', headers = header, cookies = cookies, meta = {'id_no': id_num, 'program': "HWTS", 'man_type': manifest_type})
 
 	def parseManifest(self, response):
-		print "Scraping " + response.meta["id_no"] + ", " + response.meta["program"] + ", " + response.meta["man_type"]
+		logging.info("Scraping " + response.meta["id_no"] + ", " + response.meta["program"] + ", " + response.meta["man_type"])
 		col_names = response.xpath("//tr[1]/th/text()").extract()
 		n_rows = len(response.xpath("//tr/td[1]").extract()) - 1
 

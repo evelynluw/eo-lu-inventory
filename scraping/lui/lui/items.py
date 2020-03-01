@@ -8,6 +8,16 @@
 import scrapy
 
 
+class AccelaItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    pass
+
+class DCAItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    pass
+
 class HWTSItem(scrapy.Item):
 	id_num = scrapy.Field()
 	fac_name = scrapy.Field()

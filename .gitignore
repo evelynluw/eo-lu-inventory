@@ -2,3 +2,4 @@ hwts_data/
 data/
 .venv/
 *.pyc
+*.log

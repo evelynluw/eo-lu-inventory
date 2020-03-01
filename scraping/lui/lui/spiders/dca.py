@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy import Request
-from cStringIO import StringIO
-import urllib2
+from io import StringIO
 import re
 from scrapy.http import FormRequest
 import json
 import csv
 import os
-from dca.items import DCAItems
+import logging
+from lui.items import DCAItem
 
 class DCASpider(scrapy.Spider):
 	name = 'dca'
@@ -16,7 +16,7 @@ class DCASpider(scrapy.Spider):
 	search_url = 'https://search.dca.ca.gov/results'
 	details_base_url = 'https://search.dca.ca.gov'
 
-	dir_loc = "C:/Users/dpsak/OneDrive - Communities for a Better Environment/Code/Python/grandfathering/dca_data/"
+	logger = logging.basicConfig(filename='logging.log',level=logging.INFO)
 
 	def start_requests(self):
 		search_formdata = {
