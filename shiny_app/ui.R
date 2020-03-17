@@ -16,11 +16,6 @@ library(readxl)
 library(googleway)
 library(shinydashboard)
 
-
-eo_parcels_sf <- st_read("./../data/shiny_in/eo_assess_parcels_sf.shp") %>%
-  mutate(addr_full = paste0(st_no," ",st_name)) %>%
-  rename(apn_sort = apn_srt)
-
 # Define UI for application that draws a histogram
 ui <- dashboardPage(
   dashboardHeader(title = "East Oakland Land Use Explorer"),
@@ -37,13 +32,6 @@ ui <- dashboardPage(
           tableOutput('assessor_dt'),
           width = NULL,
           collapsible = TRUE
-        ),
-        box(
-          solidHeader = TRUE,
-          title = "Businesses Listed",
-          tableOutput('businesses_dt'),
-          width = NULL,
-          collapsible = TRUE
         )
       ),
       column(
@@ -52,12 +40,6 @@ ui <- dashboardPage(
           solidHeader = TRUE,
           title = "Parcel Map",
           leafletOutput("map"),
-          width = NULL
-        ),
-        box(
-          solidHeader = TRUE,
-          title = "Streeview",
-          uiOutput("streeview"),
           width = NULL
         )
       )
