@@ -38,7 +38,14 @@ server <- function(input, output, session) {
   })
   
   output$assessor_dt <- renderTable({
-    eo_parcels_sf %>% filter(addr_full == input$search_addr) %>% 
+    #filter() automatically 'quotes' arguments. To use variables, we quote manually using sym() in the local environment
+    #unquote with !!() to evaluate as variables
+    field = sym(input$search_by)
+    value = ""
+    if (input$search_by=="addr_full") {value = input$search_addr}
+    if (input$search_by=="apn_sort") {value = input$search_apn}
+    
+    eo_parcels_sf %>% filter(!!(field) == value) %>% 
       st_drop_geometry() %>%
       select(apn_sort, use_cod, ma_addr, m_cty_s, ma_zip, owner, us_cd_c, addr_full) %>%
       mutate('Mailing Address' = paste0(ma_addr, ", ", m_cty_s, " ", ma_zip)) %>%
@@ -47,14 +54,28 @@ server <- function(input, output, session) {
   })
   
   output$businesses_dt <- renderTable({
-    apn_list <- (eo_parcels_sf %>% filter(addr_full == input$search_addr))$apn_sort
+    #filter() automatically 'quotes' arguments. To use variables, we quote manually using sym() in the local environment
+    #unquote with !!() to evaluate as variables
+    field = sym(input$search_by)
+    value = ""
+    if (input$search_by=="addr_full") {value = input$search_addr}
+    if (input$search_by=="apn_sort") {value = input$search_apn}
+    
+    apn_list <- (eo_parcels_sf %>% filter(!!(field) == value))$apn_sort
     oak_bus_license %>% filter(apn_sort %in% apn_list) %>%
       select(acct_no, dba, owner, sic_code, sic_desc, dist_parc_to_sales) %>%
       rename("Account No." = acct_no,"Business Name" = dba, "Owner" = owner, "SIC Code" = sic_code, "SIC Description" = sic_desc,"Matching Distance" = dist_parc_to_sales)
   })
   
   reactMap <- reactive({
-    eo_parcels_sf %>% filter(addr_full == input$search_addr)
+    #filter() automatically 'quotes' arguments. To use variables, we quote manually using sym() in the local environment
+    #unquote with !!() to evaluate as variables
+    field = sym(input$search_by)
+    value = ""
+    if (input$search_by=="addr_full") {value = input$search_addr}
+    if (input$search_by=="apn_sort") {value = input$search_apn}
+    
+    eo_parcels_sf %>% filter(!!(field)==value)
   })
   
   observe({

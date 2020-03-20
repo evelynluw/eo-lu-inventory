@@ -25,7 +25,13 @@ eo_parcels_sf <- st_read("./../data/shiny_in/eo_assess_parcels_sf.shp") %>%
 ui <- dashboardPage(
   dashboardHeader(title = "East Oakland Land Use Explorer"),
   dashboardSidebar(
-      selectizeInput("search_addr","Search Address",eo_parcels_sf$addr_full, selected = NULL, multiple = FALSE, options = list(create = FALSE))
+      radioButtons("search_by", "Search By:", c("Address"="addr_full", "APN"="apn_sort")),
+      conditionalPanel(condition="input.search_by == 'addr_full'",
+        selectizeInput("search_addr","Search Address",eo_parcels_sf$addr_full, selected = NULL, multiple = FALSE, options = list(create = FALSE)),
+      ),
+      conditionalPanel(condition="input.search_by == 'apn_sort'",
+        selectizeInput("search_apn","Search APN",eo_parcels_sf$apn_sort, selected = NULL, multiple = FALSE, options = list(create = FALSE))
+      )
   ),
   dashboardBody(
     fluidRow(

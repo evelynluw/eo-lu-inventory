@@ -4,9 +4,7 @@ Note this has been tested with Python 3.7.
 
 - Install pip and virtualenv
 - Create a virtual environment with `py -m venv .venv`
-    - or `python -m venv .venv`
 - Activate the virtual environment by running `.venv/Scripts/activate.bat` script
-    - `source .venv/bin/activate`
 - From the `scraping/` folder, install requirements `pip install -r requirements.txt`
 
 ## Running the Spiders Individually
