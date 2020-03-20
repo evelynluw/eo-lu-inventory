@@ -7,26 +7,23 @@ library(readxl)
 library(googleway)
 library(shinydashboard)
 
-eo_parcels_sf <- st_read("./../data/shiny_in/eo_assess_parcels_sf.shp") %>%
-  mutate(addr_full = paste0(st_no," ",st_name)) %>%
+unlink("data", recursive=TRUE)
+dir.create("data")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.shp",'./data/eo_parcels.shp', method = "wget")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.dbf",'./data/eo_parcels.dbf', method = "wget")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.prj",'./data/eo_parcels.prj', method = "wget")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.shx",'./data/eo_parcels.shx', method = "wget")
+
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/assessor/assessor_ownership.csv",'./data/assessor.csv', method = "wget")
+
+eo_parcels_sf <- st_read("./data/eo_parcels.shp") %>%
+  mutate(addr_full = sts_ddr) %>%
   rename(apn_sort = apn_srt)
 
-oak_bus_license <- read.csv("./../data/shiny_in/business_data.csv")
-
-map_key <- "AIzaSyBqD0BnsyzQEmLtbe6egspJ-ljHsZ63zoU"
+assessor <- read_csv("./data/assessor.csv") %>%
+  mutate(addr_full = paste0(street_no," ",street_name," ",city," ",zip))
 
 server <- function(input, output, session) {
-  
-  output$streeview <- renderUI({
-    tags$img(src = google_streetview(location = paste0(input$search_addr," Oakland, CA"),
-                                     size = c(350,350), output = "html",
-                                     key = map_key),  width = "100%", height = "100%")
-  })
-  
-  # Incremental changes to the map (in this case, replacing the
-  # circles when a new color is chosen) should be performed in
-  # an observer. Each independent set of things that can change
-  # should be managed in its own observer.
   
   output$map <- renderLeaflet({
     # Use leaflet() here, and only include aspects of the map that
@@ -38,20 +35,13 @@ server <- function(input, output, session) {
   })
   
   output$assessor_dt <- renderTable({
-    eo_parcels_sf %>% filter(addr_full == input$search_addr) %>% 
-      st_drop_geometry() %>%
-      select(apn_sort, use_cod, ma_addr, m_cty_s, ma_zip, owner, us_cd_c, addr_full) %>%
-      mutate('Mailing Address' = paste0(ma_addr, ", ", m_cty_s, " ", ma_zip)) %>%
-      rename('APN' = apn_sort, 'Use Code' = use_cod, 'Owner' = owner, 'Use Code Description' = us_cd_c,'Address' = addr_full) %>%
-      select(-c(ma_addr, m_cty_s, ma_zip))
+    assessor %>% filter(addr_full == input$search_addr) %>% 
+      select(apn_sort, ma_street_addr, ma_street_no, ma_city_st, ma_zip, owner_name, addr_full) %>%
+      mutate('Mailing Address' = paste0(ma_street_addr, ", ", ma_city_st, " ", ma_zip)) %>%
+      rename('APN' = apn_sort, 'Owner' = owner_name, 'Address' = addr_full) %>%
+      select(-c(ma_street_addr, ma_street_no, ma_city_st, ma_zip))
   })
   
-  output$businesses_dt <- renderTable({
-    apn_list <- (eo_parcels_sf %>% filter(addr_full == input$search_addr))$apn_sort
-    oak_bus_license %>% filter(apn_sort %in% apn_list) %>%
-      select(acct_no, dba, owner, sic_code, sic_desc, dist_parc_to_sales) %>%
-      rename("Account No." = acct_no,"Business Name" = dba, "Owner" = owner, "SIC Code" = sic_code, "SIC Description" = sic_desc,"Matching Distance" = dist_parc_to_sales)
-  })
   
   reactMap <- reactive({
     eo_parcels_sf %>% filter(addr_full == input$search_addr)
