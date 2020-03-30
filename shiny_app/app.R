@@ -6,7 +6,6 @@ library(tidyverse)
 library(readxl)
 library(googleway)
 library(shinydashboard)
-library(here)
 
 unlink("data", recursive=TRUE)
 dir.create("data")
