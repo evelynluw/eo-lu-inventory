@@ -16,6 +16,7 @@ download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_p
 download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.shx",'./data/eo_parcels.shx', method = "wget")
 
 download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/assessor/assessor_ownership.csv",'./data/assessor.csv', method = "wget")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/business_licenses/bus_licenses.csv",'./data/bus_licenses.csv', method = "wget")
 
 eo_parcels_sf <- st_read("./data/eo_parcels.shp") %>%
   mutate(addr_full = sts_ddr) %>%
@@ -23,6 +24,9 @@ eo_parcels_sf <- st_read("./data/eo_parcels.shp") %>%
 
 assessor <- read_csv("./data/assessor.csv") %>%
   mutate(addr_full = paste0(street_no," ",street_name," ",city," ",zip))
+
+bus_licenses <- read_csv("./data/bus_licenses.csv") %>%
+  mutate(addr_full2 = paste0(addr," ",city_st))
 
 server <- function(input, output, session) {
   
@@ -36,13 +40,18 @@ server <- function(input, output, session) {
   })
   
   output$assessor_dt <- renderTable({
-    assessor %>% filter(addr_full == input$search_addr) %>% 
+    assessor %>% filter(addr_full == input$search_addr & owner_name == input$search_owner) %>% 
       select(apn_sort, ma_street_addr, ma_street_no, ma_city_st, ma_zip, owner_name, addr_full) %>%
       mutate('Mailing Address' = paste0(ma_street_addr, ", ", ma_city_st, " ", ma_zip)) %>%
       rename('APN' = apn_sort, 'Owner' = owner_name, 'Address' = addr_full) %>%
       select(-c(ma_street_addr, ma_street_no, ma_city_st, ma_zip))
   })
   
+  output$bus_licenses_dt <- renderTable({
+    bus_licenses %>% 
+      select(apn_sort, sic_desc, owner, addr_full2, exp_date) %>%
+      rename('APN' = apn_sort, 'Owner' = owner, 'Address' = addr_full2, 'SIC' = sic_desc, 'Expiration' = exp_date)
+    })
   
   reactMap <- reactive({
     eo_parcels_sf %>% filter(addr_full == input$search_addr)
@@ -63,12 +72,13 @@ server <- function(input, output, session) {
 ui <- dashboardPage(
   dashboardHeader(title = "East Oakland Land Use Explorer"),
   dashboardSidebar(
-    selectizeInput("search_addr","Search Address",eo_parcels_sf$addr_full, selected = NULL, multiple = FALSE, options = list(create = FALSE))
+    selectizeInput("search_addr","Search Address",eo_parcels_sf$addr_full, selected = NULL, multiple = FALSE, options = list(create = FALSE)),
+    selectizeInput("search_owner","Search Owner",eo_parcels_sf$owner_name, selected = NULL, multiple = FALSE, options = list(create = FALSE))
   ),
   dashboardBody(
     fluidRow(
       column(
-        width = 8,
+        width = 6,
         box(
           solidHeader = TRUE,
           title = "Assessor",
@@ -78,12 +88,23 @@ ui <- dashboardPage(
         )
       ),
       column(
-        width = 4,
+        width = 6,
         box(
           solidHeader = TRUE,
           title = "Parcel Map",
           leafletOutput("map"),
           width = NULL
+        )
+      )),
+    fluidRow(
+      column(
+        width = 10,
+        box(
+          solidHeader = TRUE,
+          title = "Business Licenses",
+          tableOutput('bus_licenses_dt'),
+          width = NULL,
+          collapsible = TRUE
         )
       )
     )
