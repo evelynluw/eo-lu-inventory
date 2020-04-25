@@ -6,7 +6,13 @@ import zipcodes
 
 APIkey = "Insert Your API key for the google geocoder"
 #https://developers.google.com/maps/documentation/geocoding/start
-gmaps = googlemaps.Client(key=APIkey)
+try:
+    gmaps = googlemaps.Client(key=APIkey)
+except:
+    print("#################################################")
+    print("Open getAPN.py and insert your api key on line 7")
+    print("#################################################")
+    raise
 
 eo_addr = pandas.read_csv("data/processed_acgov/eo_addr.csv")
 eo_parcels = pandas.read_csv("data/processed_acgov/eo_parcels.csv")
