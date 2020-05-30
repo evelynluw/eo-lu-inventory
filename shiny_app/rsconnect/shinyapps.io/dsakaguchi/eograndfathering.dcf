@@ -1,0 +1,12 @@
+name: eograndfathering
+title:
+username:
+account: dsakaguchi
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1530519
+bundleId: 2620401
+url: https://dsakaguchi.shinyapps.io/eograndfathering/
+when: 1574808074.29867
+asMultiple: FALSE
+asStatic: FALSE
