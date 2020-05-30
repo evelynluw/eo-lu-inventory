@@ -45,7 +45,11 @@ parsel==1.5.2
 parso==0.6.2
 pexpect==4.8.0
 pickleshare==0.7.5
+<<<<<<< HEAD
 #pkg-resources==0.0.0
+=======
+pkg-resources==0.0.0
+>>>>>>> f7f0564a2f95adc3b76a1b677bb19339eebddf0c
 prometheus-client==0.7.1
 prompt-toolkit==3.0.4
 Protego==0.1.16
