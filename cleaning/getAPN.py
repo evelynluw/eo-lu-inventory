@@ -14,8 +14,18 @@ except:
     print("#################################################")
     raise
 
-eo_addr = pandas.read_csv("../data/processed_acgov/eo_addr.csv")
-eo_parcels = pandas.read_csv("../data/processed_acgov/eo_parcels.csv")
+class StringConverter(dict):
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return str
+
+    def get(self, default=None):
+        return str
+
+eo_addr = pandas.read_csv("../data/processed_acgov/eo_addr.csv", converters=StringConverter())
+eo_parcels = pandas.read_csv("../data/processed_acgov/eo_parcels.csv", converters=StringConverter())
 
 
 #usaddress.tag breaks up the address into components
@@ -54,6 +64,10 @@ def parse_and_norm(address, recursive=False):
         #retrieve missing city name with zip
         if len(PlaceName) < 2 and ZipCode!="":
             PlaceName = zipToCity(ZipCode)
+
+        #known error with norm; doesn't standardize BLVD to BL
+        if StreetNamePostType.lower() == "blvd":
+            StreetNamePostType = "BL"
 
         input = {
             'address_line_1': AddressNumber + StreetNamePreDirectional + " " + StreetName + " " + StreetNamePostType,
