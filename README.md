@@ -1,3 +1,13 @@
+## Make sure you're in the right branch (so our codeplace stays clean)
+
+- Available branches: (other than `master`): 
+  - `data-cleaning`
+  - `pipeline`
+  - `scraping`
+  - `shiny`
+- Switch to your branch with `git checkout [branch-name]`
+- Whenever you push, make sure you're in the right branch. Your command line should show `([branch-name] -> origin)`. 
+
 ## Python Installation
 
 Note this has been tested with Python 3.7. 
