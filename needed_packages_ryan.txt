@@ -1,0 +1,4 @@
+pip install ./usaddress ###note this package must install from local files because I had to customize the library
+pip install googlemaps
+pip install usaddress-scourgify
+pip install zipcodes

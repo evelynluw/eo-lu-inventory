@@ -1,10 +1,17 @@
 import pandas as pd
 import random
+from getAPN import getAPN
 
+print("INITIALIZING clean.py")
 #Placeholder function for Ryan. Takes in location, and then returns a parcel number.
 def getParcel(x):
-    p = random.randint(0,100)
-    return p 
+
+    p = getAPN(x) #returns list of APN matches
+    print("getting: "+x)
+    if len(p) < 1:
+        print("No APN match: " + x)
+        return "No APN MATCH"
+    return p[0] #returns first of list, arbitrarily
 
 #DCA
 dca_df = pd.read_csv('../data/scraping_out/dca/dca_data.csv')

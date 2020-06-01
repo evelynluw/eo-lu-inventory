@@ -1,0 +1,6 @@
+<AddressCollection>
+  <AddressString><AddressNumber>9612</AddressNumber> <StreetName>E</StreetName> <StreetNamePostType>ST</StreetNamePostType> <OccupancyIdentifier>3</OccupancyIdentifier> <PlaceName>OAKLAND</PlaceName> <ZipCode>94603</ZipCode></AddressString>
+  <AddressString><AddressNumber>9430</AddressNumber> <StreetName>E</StreetName> <StreetNamePostType>ST</StreetNamePostType> <PlaceName>OAKLAND</PlaceName> <ZipCode>94603</ZipCode></AddressString>
+  <AddressString><AddressNumber>9612</AddressNumber> <StreetName>E</StreetName> <StreetNamePostType>ST</StreetNamePostType> <OccupancyIdentifier>3</OccupancyIdentifier> <PlaceName>OAKLAND</PlaceName> <ZipCode>94603</ZipCode></AddressString>
+  <AddressString><AddressNumber>9430</AddressNumber> <StreetName>E</StreetName> <StreetNamePostType>ST</StreetNamePostType> <PlaceName>OAKLAND</PlaceName> <ZipCode>94603</ZipCode></AddressString>
+</AddressCollection>
