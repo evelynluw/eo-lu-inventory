@@ -5,7 +5,6 @@ def getParcel(x):
     p = getAPN(x) #returns list of APN matches
     print("getting: "+x)
     if len(p) < 1:
-        print("No APN match: " + x)
         return "No APN MATCH"
     return p[0] #returns first of list, arbitrarily
 

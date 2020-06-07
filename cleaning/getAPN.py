@@ -14,8 +14,18 @@ except:
     print("#################################################")
     raise
 
-eo_addr = pandas.read_csv("data/processed_acgov/eo_addr.csv")
-eo_parcels = pandas.read_csv("data/processed_acgov/eo_parcels.csv")
+class StringConverter(dict):
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return str
+
+    def get(self, default=None):
+        return str
+
+eo_addr = pandas.read_csv("../data/processed_acgov/eo_addr.csv", converters=StringConverter())
+eo_parcels = pandas.read_csv("../data/processed_acgov/eo_parcels.csv", converters=StringConverter())
 
 
 #usaddress.tag breaks up the address into components
@@ -33,21 +43,31 @@ def parse_and_norm(address, recursive=False):
         AddressNumber = parsed['AddressNumber']
         #AddressNumberSuffix
         StreetNamePreDirectional = " " + parsed['StreetNamePreDirectional'] if 'StreetNamePreDirectional' in parsed else ""
-        StreetName = parsed["StreetName"]
-        StreetNamePostType = parsed['StreetNamePostType']
+        StreetName = parsed["StreetName"] if 'StreetName' in parsed else ""
+        StreetNamePostType = parsed['StreetNamePostType'] if 'StreetNamePostType' in parsed else ""
         OccupancyType = parsed['OccupancyType'] if 'OccupancyType' in parsed else "" #ex/Apt, Suite
         OccupancyIdentifier = parsed['OccupancyIdentifier'] if 'OccupancyIdentifier' in parsed else "" #ex/ #3
-        PlaceName = parsed['PlaceName']
-        ZipCode = parsed['ZipCode']
+        PlaceName = parsed['PlaceName'] if 'Placename' in parsed else ""
+        ZipCode = parsed['ZipCode'] if 'ZipCode' in parsed else ""
+
+        #failure if missing AddressNumber, StreetName, or PlaceName&&ZipCode
+        if (AddressNumber=="") or (StreetName=="") or (PlaceName=="" and ZipCode==""):
+            raise Exception("failed to parse and normalize address")
 
         #retrieve missing zip with google geocoder (this should be rarely needed)
         if len(ZipCode) < 5:
             print("Invalid Zip Code ({}) from {}".format(ZipCode,address))
             ZipCode = retrieveZip(address)
+            if ZipCode == -1: #error
+                return {}
 
         #retrieve missing city name with zip
-        if len(PlaceName) < 2:
+        if len(PlaceName) < 2 and ZipCode!="":
             PlaceName = zipToCity(ZipCode)
+
+        #known error with norm; doesn't standardize BLVD to BL
+        if StreetNamePostType.lower() == "blvd":
+            StreetNamePostType = "BL"
 
         input = {
             'address_line_1': AddressNumber + StreetNamePreDirectional + " " + StreetName + " " + StreetNamePostType,
@@ -64,15 +84,37 @@ def parse_and_norm(address, recursive=False):
     except:
         #if failed, try to use google geocoder api to clean address and recover missing fields
         if recursive==True:
-            raise Exception("failed to parse and normalize address -- google geocoder failed too")
-            return
-        google_address = gmaps.geocode(address)[0]['formatted_address']
-        return parse_and_norm(google_address, True)
+            print("failed to parse and normalize address -- google geocoder failed too")
+            return {}
+        try:
+            google_address = gmaps.geocode(address)[0]['formatted_address']
+            return parse_and_norm(google_address, True)
+        except:
+            print("failed to parse and normalize address -- google geocoder failed too")
+            return {}
+
+#takes zipcode as string input, returns name of city
+def zipToCity(zipCode):
+    return zipcodes.matching(zipCode)[0]["city"]
+
+#takes address (as much as exists...hopefully enough) as string input, returns zipcode
+def retrieveZip(address):
+    res = gmaps.geocode(address)
+    try:
+        zipcode =  res[0]['address_components'][-1]['long_name']
+    except:
+        print("geocoder can't identify address: " + address)
+        return ""
+    return zipcode
+
 
 #Retrieve APN From Address string
 #returns series; address may have multiple parcels
 def getAPN(address):
     normalized = parse_and_norm(address)
+    if len(normalized)==0:
+        print("failed to find match")
+        return(["ERROR"])
     line_1 = normalized['address_line_1']
     postal = normalized['postal_code']
     q1 = eo_addr.query("line_1==@line_1 and postal==@postal").drop_duplicates("APN")["APN"]
@@ -81,4 +123,5 @@ def getAPN(address):
     return list(set(q1.tolist() + q2.tolist()))
 
 #test
+print("test:")
 print(getAPN("1745 CHURCH ST, Oakland CA 94621"))
