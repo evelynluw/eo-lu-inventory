@@ -25,11 +25,14 @@ class DCASpider(scrapy.Spider):
 			'licenseNumber': '',
 			'busName': '',
 			'registryNumber': '',
-			'advBoardCode': '21',
-			'advLicenseType': '43',
+			'advBoardCode': '21,22,25',
+			'advLicenseType': '43,45,51,52,53,54,60,61,73',
+			'advCity': 'OAKLAND2072',
 			'advHasDiscipline': '',
 			'advHasDocuments': ''
 		}
+		print("search_formdata")
+		print(search_formdata)
 
 		# send POST request with the login info
 		yield FormRequest(self.search_url, formdata = search_formdata, callback=self.parse_search_landing)
