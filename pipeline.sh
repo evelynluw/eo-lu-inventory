@@ -12,11 +12,11 @@ echo "Updating requirements..."
 pip install -r processors/requirements.txt
 
 # Remove existing data
-echo "Cleaning up existing data folder..."
-rm -rf data
-echo "Re-making data folder..."
-mkdir data
-mkdir -p data/raw/
+# echo "Cleaning up existing data folder..."
+# rm -rf data
+# echo "Re-making data folder..."
+# mkdir data
+# mkdir -p data/raw/
 
 # Extracting Data
 echo "--------------- EXTRACTIONS -------------"
@@ -24,23 +24,23 @@ echo "--------------- EXTRACTIONS -------------"
 
 ## Run Scrapy spiders
 echo "------------------- Data Scraping -------------"
-echo "Navigating to Scraper folder..."
-cd processors/scraping/lui
+# echo "Navigating to Scraper folder..."
+# cd processors/scraping/lui
 
-echo "Scraping [ACCELA] Oakland Planning Permits (Zoning Clearances) Info"
-scrapy crawl accela -o ../../../data/scraping_out/accela/accela_data.csv
-echo "Finished scraping [ACCELA]"
+# echo "Scraping [ACCELA] Oakland Planning Permits (Zoning Clearances) Info"
+# scrapy crawl accela -o ../../../data/scraping_out/accela/accela_data.csv
+# echo "Finished scraping [ACCELA]"
 
-echo "Scraping [DCA] State Business Licenses (Records for Automotive Repair Dealers)"
-scrapy crawl dca -o ../../../data/scraping_out/dca/dca_data.csv
-echo "Finished scraping [DCA]"
+# echo "Scraping [DCA] State Business Licenses (Records for Automotive Repair Dealers)"
+# scrapy crawl dca -o ../../../data/scraping_out/dca/dca_data.csv
+# echo "Finished scraping [DCA]"
 
-echo "Scraping [HWTS] Hazardous Materials Transfer Data"
-scrapy crawl hwts -o ../../../data/scraping_out/hwts/hwts_data.csv
-echo "Finished scraping [HWTS]"
+# echo "Scraping [HWTS] Hazardous Materials Transfer Data"
+# scrapy crawl hwts -o ../../../data/scraping_out/hwts/hwts_data.csv
+# echo "Finished scraping [HWTS]"
 
-echo "Navigating back to top level..."
-cd ../..
+# echo "Navigating back to top level..."
+# cd ../..
 
 echo "=================== Finished Data Scraping ==============="
 read -t 5 -n 1 -s -r -p "Press any key to continue and download Raw Data (cont. in 5 seconds)"
@@ -93,7 +93,6 @@ echo "--------------- TRANSFORMATIONS -------------"
 echo "Converting Assessor TXT to CSV..."
 mkdir -p data/intermediates
 python3 processors/Transformers.py convert_assessor_to_csv -f data/raw/assessor/assessor_ownership.TXT > data/intermediates/assessor_ownership.csv
-
 echo "=================== Finished TRANSFORMATIONS ==============="
 
 # Data Cleaning

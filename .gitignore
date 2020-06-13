@@ -1,4 +1,7 @@
 .venv/
 *.pyc
 *.log
+# data folder is not stored in the repository -- must be scraped locally
 data/
+# ignore API keys
+*.key
