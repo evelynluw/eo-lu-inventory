@@ -1,7 +1,14 @@
 .venv/
 *.pyc
 *.log
-# data folder is not stored in the repository -- must be scraped locally
-data/
+# some data are stored in the data folder, except for the scraping_out
+data/scraping_out
+data/intermediates
+data/raw
 # ignore API keys
 *.key
+# ignore Rhistory file
+shiny_app/.Rhistory
+#ignore vscode files
+.vscode/
+.vscode/settings.json
