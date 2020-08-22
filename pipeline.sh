@@ -9,7 +9,7 @@ pip install -U pip
 echo "Activating virtual environment..."
 source .venv/bin/activate
 echo "Updating requirements..."
-pip install -r backend/processors/requirements.txt
+pip install -r required_packages/requirements.txt
 
 # Remove existing data
 # echo "Cleaning up existing data folder..."
