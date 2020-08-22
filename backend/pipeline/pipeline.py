@@ -15,7 +15,7 @@ def run_pipeline():
         return the root path
         """
         p = Path.cwd()
-        while p.name != 'eo-lu-inventory':
+        while p.name != 'backend':
             p = p.parent
         return p
 
