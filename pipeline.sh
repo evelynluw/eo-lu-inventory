@@ -9,7 +9,7 @@ pip install -U pip
 echo "Activating virtual environment..."
 source .venv/bin/activate
 echo "Updating requirements..."
-pip install -r processors/requirements.txt
+pip install -r backend/processors/requirements.txt
 
 # Remove existing data
 # echo "Cleaning up existing data folder..."
@@ -24,23 +24,23 @@ echo "--------------- EXTRACTIONS -------------"
 
 ## Run Scrapy spiders
 echo "------------------- Data Scraping -------------"
-# echo "Navigating to Scraper folder..."
-# cd processors/scraping/lui
+echo "Navigating to Scraper folder..."
+cd backend/processors/scraping/lui
 
-# echo "Scraping [ACCELA] Oakland Planning Permits (Zoning Clearances) Info"
-# scrapy crawl accela -o ../../../data/scraping_out/accela/accela_data.csv
-# echo "Finished scraping [ACCELA]"
+echo "Scraping [ACCELA] Oakland Planning Permits (Zoning Clearances) Info"
+scrapy crawl accela -o ../../../data/scraping_out/accela/accela_data.csv
+echo "Finished scraping [ACCELA]"
 
-# echo "Scraping [DCA] State Business Licenses (Records for Automotive Repair Dealers)"
-# scrapy crawl dca -o ../../../data/scraping_out/dca/dca_data.csv
-# echo "Finished scraping [DCA]"
+echo "Scraping [DCA] State Business Licenses (Records for Automotive Repair Dealers)"
+scrapy crawl dca -o ../../../data/scraping_out/dca/dca_data.csv
+echo "Finished scraping [DCA]"
 
-# echo "Scraping [HWTS] Hazardous Materials Transfer Data"
-# scrapy crawl hwts -o ../../../data/scraping_out/hwts/hwts_data.csv
-# echo "Finished scraping [HWTS]"
+echo "Scraping [HWTS] Hazardous Materials Transfer Data"
+scrapy crawl hwts -o ../../../data/scraping_out/hwts/hwts_data.csv
+echo "Finished scraping [HWTS]"
 
-# echo "Navigating back to top level..."
-# cd ../..
+echo "Navigating back to backend/..."
+cd ../..
 
 echo "=================== Finished Data Scraping ==============="
 read -t 5 -n 1 -s -r -p "Press any key to continue and download Raw Data (cont. in 5 seconds)"
