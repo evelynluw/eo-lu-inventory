@@ -9,25 +9,29 @@ library(readxl)
 library(googleway)
 library(shinydashboard)
 library(shiny.router)
-# library(bootstraplib) 
+# library(bootstraplib)
 
 # Pages
 
 root_page <- navbarPage(
+  # bootstrap("cosmo"),
   title = "East Oakland Facility Inventory",
   id = "nav",
   fluid = TRUE,
   collapsible = TRUE,
   theme = "flatly.min.css",
+  selected = "Home",
+  tags$link(rel="stylesheet", href="https://unpkg.com/tachyons@4.12.0/css/tachyons.min.css"),
   tabPanel("Home", 
     withTags({
-      div(class = "home__div",
+      div(class = "home__div center w-60-ns",
         h1("Welcome to the East Oakland Land Use Inventory"),
         p("Use this page to research a facility in East Oakland."),
         p("Select an option below to get started."),
-        actionButton("goToSearchbyAddress", "I have a facility I want to research by address"),
-        actionButton("goToSearchbyNeighborhood", "I want to explore facilities by neighborhood"),
-        style(type='text/css', ".home__div { width: 60%; margin: auto; min-width: 20em; }")
+        div(class = "flex justify-between container-fluid mv4",
+          actionButton(class="btn-lg btn-success w-50 ws-normal mr2", "goToSearchbyAddress", "I have a facility I want to research by address"),
+          actionButton(class="btn-lg btn-success w-50 ws-normal ml2", "goToSearchbyNeighborhood", "I want to explore facilities by neighborhood"),
+        )
       )
     })
   ),
@@ -37,18 +41,21 @@ root_page <- navbarPage(
   ),
   tabPanel("Details", 
     titlePanel("Details page"),
-    actionButton("goToSearch", "Back")
+    actionButton("backToSearchbyAddress", "Back")
   ),
   tabPanel("Glossary"),
   tabPanel("About"),
   tabPanel("FAQ"), 
   footer = withTags({
-    div(class = "footer row bg-primary container",
-      div(class="col-md-3 center-block", 
-        a(class = "btn btn-info btn-sm", href="https://shiny.rstudio.com/", "Contact Us")
-      ),
-      p(class = "col-md-6 text-center", "Maintained by Communities for a Better Environment and Supporters"),
-      style(type='text/css', " .footer { width: 100%; position: fixed; bottom: 0; padding-top: 1em; }")
+    div(class = "bg-primary w-100 fixed bottom-0 pv3",
+      div(class = "row",
+        div(class="col-md-2 tc tl-l", 
+          a(class = "btn btn-info btn-sm ml4-l", href="https://shiny.rstudio.com/", "Contact Us")
+        ),
+        div(class="col-md-10 tc tr-l pr5-ns mt2",
+          p(class = "text-white", "Maintained by Communities for a Better Environment and Supporters")
+        )
+      )
     )
   })
 )
@@ -77,8 +84,9 @@ server <- shinyServer(function(input, output, session) {
     updateTabsetPanel(session, "nav", "Details")
   })
 
-  observeEvent(input$goToSearch, {
+  observeEvent(input$backToSearchbyAddress, {
     updateTabsetPanel(session, "nav", "Search")
+    hideTab(inputId = "nav", target = "Details")
   })
 
   observeEvent(input$goToSearchbyAddress, {
