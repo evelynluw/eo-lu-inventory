@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">East Oakland Facility Inventory</a>
+  <a class="navbar-brand" href="#">E.O. Facility Inventory</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
     aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -18,7 +18,7 @@
     activate = function(jqObj) {
       navItems.removeClass("active");
       jqObj.addClass("active");
-      if (parseInt($(window).width()) < 768) {
+      if ($("#navbarNavAltMarkup").hasClass("show") && parseInt($(window).width()) < 768) {
         $(".navbar-toggler").click();
       }
     }
