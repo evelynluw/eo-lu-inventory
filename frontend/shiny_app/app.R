@@ -100,6 +100,7 @@ footerbar <- withTags({
 })
 
 # Routing
+
 router <- make_router(
   default = route("/", home_page),
   route("/", home_page),
@@ -110,6 +111,7 @@ router <- make_router(
 )
 
 # Server
+
 server <- shinyServer(function(input, output, session) {
   router(input, output, session)
 
