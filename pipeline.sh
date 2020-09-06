@@ -5,6 +5,23 @@
 
 echo "--------------- EXTRACTIONS -------------"
 
+# Setting up the environment
+echo "Updating pip"
+pip install -U pip
+echo "Activating virtual environment..."
+source .venv/bin/activate
+echo "Updating requirements..."
+pip install -r required_packages/requirements.txt
+
+# Remove existing data
+echo "Cleaning up existing data folder..."
+rm -rf backend/data/scraping_out
+rm -rf backend/data/raw/
+
+echo "Re-making data folder..."
+mkdir -p backend/data/raw/
+
+# Extracting Data
 
 ## Run Scrapy spiders
 echo "------------------- Data Scraping -------------"
@@ -24,13 +41,12 @@ scrapy crawl hwts -o ../../../data/scraping_out/hwts/hwts_data.csv
 echo "Finished scraping [HWTS]"
 
 echo "Navigating back to backend/..."
-cd ../..
+cd ../../..
 
 echo "=================== Finished Data Scraping ==============="
 read -t 5 -n 1 -s -r -p "Press any key to continue and download Raw Data (cont. in 5 seconds)"
 
 ## Download Raw Data
-
 echo "------------------- Downloading Raw Data -------------"
 
 echo "Downloading Alameda County parcel polygons..."
@@ -80,7 +96,7 @@ python3 processors/Transformers.py convert_assessor_to_csv -f data/raw/assessor/
 echo "=================== Finished TRANSFORMATIONS ==============="
 
 # Data Cleaning
-### TODO: Process data cleaning here. Then output the cleaned data to data/shiny_in
+python3 backend/cleaning/clean.py
 
 # Upload Data
-### TODO: upload final data to S3 bucket
+python3 backend/pipeline/pipeline.py

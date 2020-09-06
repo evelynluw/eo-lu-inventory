@@ -99,10 +99,9 @@ def run_pipeline():
 
     logging.basicConfig(level=logging.DEBUG)
     root_path = get_root_path()
-    download_list = get_download_list()
-    for file in download_list:
-        download_file(file['url'], file['path'])
+    # download_list = get_download_list()
+    # for file in download_list:
+    #     download_file(file['url'], file['path'])
     upload_data()
-
 
 run_pipeline()

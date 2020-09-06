@@ -7,15 +7,17 @@ library(readxl)
 library(googleway)
 library(shinydashboard)
 
+shinyOptions(shiny.autoreload=TRUE)
+
 unlink("data", recursive=TRUE)
 dir.create("data")
-download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.shp",'./data/eo_parcels.shp', method = "wget")
-download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.dbf",'./data/eo_parcels.dbf', method = "wget")
-download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.prj",'./data/eo_parcels.prj', method = "wget")
-download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.shx",'./data/eo_parcels.shx', method = "wget")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.shp",'./data/eo_parcels.shp', method = "auto", mod = "wb")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.dbf",'./data/eo_parcels.dbf', method = "auto", mod = "wb")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.prj",'./data/eo_parcels.prj', method = "auto", mod = "wb")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/eo_parcels/EO_Parcels.shx",'./data/eo_parcels.shx', method = "auto", mod = "wb")
 
-download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/assessor/assessor_ownership.csv",'./data/assessor.csv', method = "wget")
-download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/business_licenses/bus_licenses.csv",'./data/bus_licenses.csv', method = "wget")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/assessor/assessor_ownership.csv",'./data/assessor.csv', method = "auto", mod = "wb")
+download.file("https://eo-lu-inventory.s3-us-west-1.amazonaws.com/for_shiny/business_licenses/bus_licenses.csv",'./data/bus_licenses.csv', method = "auto", mod = "wb")
 
 eo_parcels_sf <- st_read("./data/eo_parcels.shp") %>%
   mutate(addr_full = sts_ddr) %>%
