@@ -13,3 +13,4 @@ shiny_app/.Rhistory
 #ignore vscode files
 .vscode/
 .vscode/settings.json
+*/__pycache__/

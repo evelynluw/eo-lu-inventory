@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">E.O. Facility Inventory</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link nav-default" href="#">Home</a>
+      <a class="nav-item nav-link" href="/#!/search">Search</a>
+      <!-- <a class="nav-item nav-link" href="/#!/details">Details</a> -->
+      <a class="nav-item nav-link" href="/#!/about">About</a>
+      <a class="nav-item nav-link" href="/#!/faq">FAQ</a>
+    </div>
+  </div>
+  <script>
+    navItems = $(".navbar-nav > .nav-item");
+    activate = function(jqObj) {
+      navItems.removeClass("active");
+      jqObj.addClass("active");
+      if ($("#navbarNavAltMarkup").hasClass("show") && parseInt($(window).width()) < 768) {
+        $(".navbar-toggler").click();
+      }
+    }
+    navItems.each(function() {
+      $(this).click(function() {
+        activate($(this));
+      });
+    });
+    $(".navbar-brand").click(function() {
+      activate($(".nav-default"));
+    });
+  </script>
+</nav>

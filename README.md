@@ -36,16 +36,33 @@ Run `scrapy crawl hwts -o ../../../data/scraping_out/hwts/hwts_data.csv`. This w
 
 ## Data Pipeline
 
-A very basic data pipeline has been created under `data_pipeline/basic_pipeline.py`. The idea is that data will be uploaded into three folders under `data`: 
-- `scraping_out/` for all data scraped by the spiders
-- `manual_upload/` for all data that will be manually uploaded
-- `api_out/` for all data that is downloaded from APIs
+The purpose of the pipeline is to scrap the data, run the data cleaning and processing scripts, and upload it to the s3 bucket. 
 
-Currently this is just a mock-up, and doesn't do any data cleaning or transformation. You will need to use the `geopandas` module in Python to load in and process the geospatial data layers.
+Currently the data scraping / processing can be handled by the bash script. The python script will handle the data uploading. 
 
-After those data are loaded in, here is where data cleaning and transformation would happen, to create merge keys for the files, etc.
+If you are on a unix based system, try running 
 
-Finally, those data are loaded into the `shiny_in/` folder, which should be the full set of files necessary to run the Shiny app. The data in the `shiny_in/` folder are placeholders necessary to run the current Shiny app, and are not the results of running the `basic_pipeline.py` script currently.
+```
+./install_requirements.sh
+./pipeline.sh
+``` 
+or 
+
+```
+bash ./install_requirements.sh
+bash ./pipeline.sh
+```
+
+On windows, you can run the same command inside a [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) shell. 
+
+You can also run the Python pipeline by running:
+
+```
+pip install -U pip
+source .venv/bin/activate
+pip install -r required_packages/requirements.txt
+python ./backend/pipeline/pipeline.py
+```
 
 ## Running Shiny App
 
