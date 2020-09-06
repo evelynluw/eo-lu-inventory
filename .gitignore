@@ -2,10 +2,10 @@
 *.pyc
 *.log
 # some data folders are ignored
-data/scraping_out
-data/intermediates
-data/raw
-shiny_app/data/
+backend/data/scraping_out
+backend/data/intermediates
+backend/data/raw
+frontend/shiny_app/data/
 # ignore API keys
 *.key
 # ignore Rhistory file
