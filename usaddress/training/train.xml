@@ -1,0 +1,13 @@
+<AddressCollection>
+  <AddressString><AddressNumber>2648</AddressNumber> <StreetName>INTERNATIONAL</StreetName> <StreetNamePostType>BL</StreetNamePostType> <OccupancyType>STE</OccupancyType> <OccupancyIdentifier>59</OccupancyIdentifier> <PlaceName>OAKLAND</PlaceName> <ZipCode>94601</ZipCode></AddressString>
+  <AddressString><AddressNumber>1037</AddressNumber> <StreetName>SAN</StreetName> <StreetName>FRANCISCO</StreetName> <StreetNamePostType>CT</StreetNamePostType> <PlaceName>OAKLAND</PlaceName> <ZipCode>94601</ZipCode></AddressString>
+  <AddressString><AddressNumber>814</AddressNumber> <StreetName>69TH</StreetName> <StreetNamePostType>AV</StreetNamePostType> <OccupancyIdentifier>3</OccupancyIdentifier> <PlaceName>OAKLAND</PlaceName> <ZipCode>94621</ZipCode></AddressString>
+  <AddressString><AddressNumber>5472</AddressNumber> <StreetName>FOOTHILL</StreetName> <StreetNamePostType>BL</StreetNamePostType> <PlaceName>OAKLAND</PlaceName> <ZipCode>94601</ZipCode></AddressString>
+  <AddressString><AddressNumber>5478</AddressNumber> <StreetName>FOOTHILL</StreetName> <StreetNamePostType>BL</StreetNamePostType> <PlaceName>OAKLAND</PlaceName> <ZipCode>94601</ZipCode></AddressString>
+  <AddressString><AddressNumber>10576</AddressNumber> <StreetName>CREEKSIDE</StreetName> <StreetNamePostType>CI</StreetNamePostType> <PlaceName>OAKLAND</PlaceName> <ZipCode>94603</ZipCode></AddressString>
+  <AddressString><AddressNumber>3234</AddressNumber> <StreetNamePreDirectional>E</StreetNamePreDirectional> <StreetName>27TH</StreetName> <StreetNamePostType>ST</StreetNamePostType> <OccupancyIdentifier>2</OccupancyIdentifier> <PlaceName>OAKLAND</PlaceName> <ZipCode>94601</ZipCode></AddressString>
+  <AddressString><AddressNumber>2530</AddressNumber> <StreetName>34TH</StreetName> <StreetNamePostType>AV</StreetNamePostType> <OccupancyIdentifier>1</OccupancyIdentifier> <PlaceName>OAKLAND</PlaceName> <ZipCode>94601</ZipCode></AddressString>
+  <AddressString><AddressNumber>1036</AddressNumber> <StreetName>SAN</StreetName> <StreetName>FRANCISCO</StreetName> <StreetNamePostType>CT</StreetNamePostType> <PlaceName>OAKLAND</PlaceName> <ZipCode>94601</ZipCode></AddressString>
+  <AddressString><AddressNumber>6006</AddressNumber> <StreetName>INTERNATIONAL</StreetName> <StreetNamePostType>BL</StreetNamePostType> <OccupancyIdentifier>5</OccupancyIdentifier> <PlaceName>OAKLAND</PlaceName> <ZipCode>94621</ZipCode></AddressString>
+  <AddressString><AddressNumber>521</AddressNumber> <StreetName>LA</StreetName> <StreetName>PRENDA</StreetName> <StreetNamePostType>DR</StreetNamePostType> <PlaceName>OAKLAND</PlaceName> <ZipCode>94603</ZipCode></AddressString>
+</AddressCollection>
