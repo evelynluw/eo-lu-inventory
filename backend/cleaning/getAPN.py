@@ -6,6 +6,7 @@ import zipcodes
 
 APIkey = "Insert Your API key for the google geocoder"
 #https://developers.google.com/maps/documentation/geocoding/start
+APIkey="AIzaSyBAAnFccRZCGXrpb7vv2uf3UnZ18Eh4VsQ"
 try:
     gmaps = googlemaps.Client(key=APIkey)
 except:
@@ -24,9 +25,8 @@ class StringConverter(dict):
     def get(self, default=None):
         return str
 
-eo_addr = pandas.read_csv("../data/processed_acgov/eo_addr.csv", converters=StringConverter())
-eo_parcels = pandas.read_csv("../data/processed_acgov/eo_parcels.csv", converters=StringConverter())
-
+eo_addr = pandas.read_csv("~/eo-lu-inventory/backend/data/processed_acgov/eo_addr.csv", converters=StringConverter())
+eo_parcels = pandas.read_csv("~/eo-lu-inventory/backend/data/processed_acgov/eo_parcels.csv", converters=StringConverter())
 
 #usaddress.tag breaks up the address into components
     #some addresses have unusual elements (ex/ 'StreetNamePreDirectional' as in 10500 E 14th St)
@@ -119,8 +119,11 @@ def getAPN(address):
     postal = normalized['postal_code']
     q1 = eo_addr.query("line_1==@line_1 and postal==@postal").drop_duplicates("APN")["APN"]
     q2 = eo_parcels.query("line_1==@line_1 and postal==@postal").drop_duplicates("APN_SORT")["APN_SORT"]
+
     #convert list to set and back to only return unique values (set keys must be unique)
-    return list(set(q1.tolist() + q2.tolist()))
+    result = list(set(q1.tolist() + q2.tolist()))
+    
+    return result
 
 #test
 print("test:")
